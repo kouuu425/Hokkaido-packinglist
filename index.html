@@ -229,8 +229,6 @@
     .cat-cnt { font-size: .7rem; font-weight: 800; color: var(--blue); }
     .cat-cnt.done { color: var(--green); }
     .cat-chev { font-size: .64rem; color: var(--muted); transition: transform .18s; }
-    .cat-block.collapsed .cat-chev { transform: rotate(-90deg); }
-    .cat-block.collapsed .item-list, .cat-block.collapsed .add-inline { display: none; }
 
     .item-list { list-style: none; }
     .item {
@@ -380,16 +378,18 @@
 <section id="s-packing">
   <div class="sec-sep"></div>
   <div class="wrap">
-    <div class="sec-heading"><h2>持ち物リスト</h2></div>
-    <div class="prog-row">
-      <span class="prog-lbl">進捗</span>
-      <span class="prog-pct" id="progressPct">0%</span>
+    <div class="sec-heading" id="packToggle" style="cursor:pointer;-webkit-tap-highlight-color:transparent;">
+      <h2>持ち物リスト</h2>
+      <span class="prog-pct" id="progressPct" style="font-size:.7rem;font-weight:800;color:var(--blue);margin-right:4px;">0%</span>
+      <span id="packChev" style="font-size:.65rem;color:var(--muted);transition:transform .18s;">▾</span>
     </div>
-    <div class="prog-track"><div class="prog-fill" id="progressFill"></div></div>
-    <div id="pack-main"></div>
-    <div class="pack-footer">
-      <button class="txt-btn danger" id="resetBtn">チェックをすべてリセット</button>
-      <button class="txt-btn" id="restoreBtn">デフォルトの項目に戻す</button>
+    <div id="pack-body">
+      <div class="prog-track" style="margin-top:-8px;"><div class="prog-fill" id="progressFill"></div></div>
+      <div id="pack-main"></div>
+      <div class="pack-footer">
+        <button class="txt-btn danger" id="resetBtn">チェックをすべてリセット</button>
+        <button class="txt-btn" id="restoreBtn">デフォルトの項目に戻す</button>
+      </div>
     </div>
   </div>
 </section>
@@ -657,18 +657,17 @@ function buildPacking() {
   main.innerHTML = "";
   DEFAULTS.forEach(cat => {
     const block = document.createElement("div");
-    block.className = "cat-block collapsed";
+    block.className = "cat-block";
     block.dataset.cat = cat.id;
 
     const hd = document.createElement("div");
     hd.className = "cat-hd";
+    hd.style.cursor = "default";
     hd.innerHTML = `
       <span class="cat-icon">${cat.icon}</span>
       <span class="cat-name">${cat.name}</span>
       <span class="cat-rule"></span>
-      <span class="cat-cnt" data-cat="${cat.id}">0/0</span>
-      <span class="cat-chev">▾</span>`;
-    hd.addEventListener("click", () => block.classList.toggle("collapsed"));
+      <span class="cat-cnt" data-cat="${cat.id}">0/0</span>`;
 
     const list = document.createElement("ul");
     list.className = "item-list";
@@ -696,6 +695,20 @@ document.getElementById("restoreBtn").addEventListener("click", () => {
   DEFAULTS.forEach(cat => { data.items[cat.id] = mkItems(cat); });
   save();
   buildPacking();
+});
+
+/* ── Packing section toggle ── */
+const packBody = document.getElementById("pack-body");
+const packChev = document.getElementById("packChev");
+let packOpen = false;
+
+packBody.style.display = "none";
+packChev.style.transform = "rotate(-90deg)";
+
+document.getElementById("packToggle").addEventListener("click", () => {
+  packOpen = !packOpen;
+  packBody.style.display = packOpen ? "block" : "none";
+  packChev.style.transform = packOpen ? "rotate(0deg)" : "rotate(-90deg)";
 });
 
 buildPacking();
