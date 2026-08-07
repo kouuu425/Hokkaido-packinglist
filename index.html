@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>北海道旅行 持ち物リスト</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --primary: #2563eb;
+      --primary-light: #eff6ff;
+      --checked-text: #9ca3af;
+      --border: #e5e7eb;
+      --text: #111827;
+      --text-sub: #6b7280;
+      --radius: 14px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: 0 0 80px;
+    }
+
+    header {
+      background: var(--primary);
+      color: #fff;
+      padding: 20px 16px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    }
+
+    header h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    header p {
+      font-size: .78rem;
+      opacity: .85;
+      margin-top: 2px;
+    }
+
+    .progress-wrap {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-bar-bg {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,.3);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #fff;
+      border-radius: 99px;
+      transition: width .3s ease;
+      width: 0%;
+    }
+
+    .progress-pct {
+      font-size: .85rem;
+      font-weight: 700;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    main {
+      padding: 12px 12px 0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .category-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 16px;
+      background: #f9fafb;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .category-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .97rem;
+      font-weight: 700;
+    }
+
+    .category-icon {
+      font-size: 1.1rem;
+    }
+
+    .category-badge {
+      font-size: .78rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 99px;
+      background: var(--primary-light);
+      color: var(--primary);
+      min-width: 42px;
+      text-align: center;
+    }
+
+    .category-badge.complete {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+
+    .chevron {
+      font-size: .75rem;
+      color: var(--text-sub);
+      transition: transform .2s;
+      margin-left: 4px;
+    }
+
+    .category-card.collapsed .chevron { transform: rotate(-90deg); }
+    .category-card.collapsed .item-list { display: none; }
+
+    .item-list { list-style: none; }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .15s;
+      min-height: 52px;
+    }
+
+    .item:last-child { border-bottom: none; }
+    .item:active { background: #f9fafb; }
+
+    .check-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      border: 2px solid #d1d5db;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+    }
+
+    .item.checked .check-box {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .check-mark {
+      display: none;
+      color: #fff;
+      font-size: .8rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .item.checked .check-mark { display: block; }
+
+    .item-label {
+      font-size: .95rem;
+      line-height: 1.4;
+      transition: color .15s;
+    }
+
+    .item.checked .item-label {
+      text-decoration: line-through;
+      color: var(--checked-text);
+    }
+
+    .reset-btn {
+      display: block;
+      width: calc(100% - 24px);
+      max-width: 576px;
+      margin: 4px auto 0;
+      padding: 15px;
+      background: #fff;
+      color: #ef4444;
+      border: 2px solid #fecaca;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .reset-btn:active { background: #fff1f2; border-color: #ef4444; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏔️ 北海道旅行 持ち物リスト</h1>
+  <p>3泊4日 ・ SUPあり</p>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-pct" id="progressPct">0%</span>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<button class="reset-btn" id="resetBtn">↺ すべてリセット</button>
+
+<script>
+const CATEGORIES = [
+  {
+    id: "clothes",
+    icon: "👕",
+    name: "衣類",
+    items: [
+      "3日分の下着",
+      "3日分の洋服",
+      "スポーツ用シャツ (2枚)",
+      "パジャマ",
+      "羽織りもの (朝晩冷える対策)",
+      "水着",
+      "ラッシュガード",
+      "サンダル / マリンシューズ",
+      "帽子",
+      "サングラス",
+    ],
+  },
+  {
+    id: "toiletry",
+    icon: "🧴",
+    name: "洗面・衛生用品",
+    items: [
+      "シャンプー・リンス・ボディソープ",
+      "歯ブラシ・歯磨き粉",
+      "タオルハンカチ",
+      "バスタオル",
+      "速乾タオル",
+      "髭剃り",
+      "塗り薬",
+      "飲み薬",
+      "のど飴",
+      "鼻呼吸テープ",
+      "汗拭きシート",
+    ],
+  },
+  {
+    id: "electronics",
+    icon: "🔌",
+    name: "電子機器",
+    items: [
+      "スマホ",
+      "モバイルバッテリー・充電器類",
+      "カメラ",
+      "イヤホン",
+      "スマートウォッチ",
+      "Switch のリモコン",
+    ],
+  },
+  {
+    id: "valuables",
+    icon: "💳",
+    name: "貴重品・書類",
+    items: [
+      "財布",
+      "運転免許証 (レンタカー予定なら)",
+    ],
+  },
+  {
+    id: "bags",
+    icon: "🎒",
+    name: "バッグ・小物",
+    items: [
+      "スーツケース",
+      "少し大きめのカバン",
+      "ポーチ",
+      "防水ポーチ (スマホ・貴重品用)",
+      "エコバッグ",
+      "折りたたみ傘",
+      "日傘",
+      "スリッパ",
+    ],
+  },
+  {
+    id: "daily",
+    icon: "🧻",
+    name: "生活用品",
+    items: [
+      "ゴミ袋",
+      "ティッシュ",
+      "マスク",
+      "ジップロック",
+    ],
+  },
+  {
+    id: "other",
+    icon: "☀️",
+    name: "その他",
+    items: [
+      "日焼け止め (SUP用にウォータープルーフ推奨)",
+      "雨具 (降水確率高め・折りたたみ傘で対応可)",
+    ],
+  },
+];
+
+const STORAGE_KEY = "hokkaido-packing-v1";
+
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  } catch { return {}; }
+}
+
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = loadState();
+
+function itemKey(catId, idx) { return `${catId}__${idx}`; }
+
+function updateProgress() {
+  let total = 0, checked = 0;
+  CATEGORIES.forEach(cat => {
+    cat.items.forEach((_, i) => {
+      total++;
+      if (state[itemKey(cat.id, i)]) checked++;
+    });
+  });
+  const pct = total === 0 ? 0 : Math.round(checked / total * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressPct").textContent = pct + "%";
+}
+
+function updateCategoryBadge(catId) {
+  const cat = CATEGORIES.find(c => c.id === catId);
+  const total = cat.items.length;
+  const checked = cat.items.filter((_, i) => state[itemKey(catId, i)]).length;
+  const badge = document.querySelector(`.category-badge[data-cat="${catId}"]`);
+  badge.textContent = `${checked}/${total}`;
+  badge.classList.toggle("complete", checked === total);
+}
+
+function toggleItem(catId, idx, el) {
+  const key = itemKey(catId, idx);
+  state[key] = !state[key];
+  saveState(state);
+  el.classList.toggle("checked", state[key]);
+  updateCategoryBadge(catId);
+  updateProgress();
+}
+
+function buildUI() {
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+
+  CATEGORIES.forEach(cat => {
+    const card = document.createElement("div");
+    card.className = "category-card";
+    card.dataset.catId = cat.id;
+
+    const header = document.createElement("div");
+    header.className = "category-header";
+    header.innerHTML = `
+      <span class="category-title">
+        <span class="category-icon">${cat.icon}</span>
+        ${cat.name}
+        <span class="chevron">▾</span>
+      </span>
+      <span class="category-badge" data-cat="${cat.id}">0/${cat.items.length}</span>
+    `;
+    header.addEventListener("click", () => {
+      card.classList.toggle("collapsed");
+    });
+
+    const list = document.createElement("ul");
+    list.className = "item-list";
+
+    cat.items.forEach((label, i) => {
+      const li = document.createElement("li");
+      li.className = "item";
+      if (state[itemKey(cat.id, i)]) li.classList.add("checked");
+      li.innerHTML = `
+        <span class="check-box"><span class="check-mark">✓</span></span>
+        <span class="item-label">${label}</span>
+      `;
+      li.addEventListener("click", () => toggleItem(cat.id, i, li));
+      list.appendChild(li);
+    });
+
+    card.appendChild(header);
+    card.appendChild(list);
+    main.appendChild(card);
+
+    updateCategoryBadge(cat.id);
+  });
+
+  updateProgress();
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (!confirm("チェックをすべてリセットしますか？")) return;
+  state = {};
+  saveState(state);
+  buildUI();
+});
+
+buildUI();
+</script>
+</body>
+</html>
