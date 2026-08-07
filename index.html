@@ -329,7 +329,7 @@
       border-radius: 99px;
       background: var(--purple);
       color: #fff;
-      text-decoration: none;
+      border: none;
       font-size: .9rem;
       font-weight: 800;
       font-family: inherit;
@@ -338,12 +338,115 @@
       -webkit-tap-highlight-color: transparent;
       transition: transform .15s cubic-bezier(.22,1,.36,1), box-shadow .15s;
       user-select: none;
+      cursor: pointer;
     }
     .walica-fab:active {
       transform: scale(.93);
       box-shadow: 0 2px 10px rgba(76,29,149,.35);
     }
     .walica-fab .wf-i { font-size: 1.1rem; }
+
+    /* ── Walica bottom sheet ── */
+    .walica-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+    .walica-backdrop.open { opacity: 1; pointer-events: auto; }
+
+    .walica-sheet {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 310;
+      height: 92dvh;
+      background: #fff;
+      border-radius: 16px 16px 0 0;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform .3s cubic-bezier(.22,1,.36,1);
+      overflow: hidden;
+    }
+    .walica-sheet.open { transform: translateY(0); }
+
+    .ws-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px 13px;
+      background: var(--purple);
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .ws-hd-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .92rem;
+      font-weight: 800;
+    }
+
+    .ws-ext {
+      font-size: .72rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.7);
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 99px;
+      padding: 4px 10px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ws-ext:active { background: rgba(255,255,255,.15); }
+
+    .ws-close {
+      background: rgba(255,255,255,.18);
+      border: none;
+      color: #fff;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ws-iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #f5f5f5;
+    }
+
+    .ws-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: .85rem;
+      pointer-events: none;
+    }
+    .ws-spinner {
+      width: 28px; height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .ws-iframe-wrap { flex: 1; position: relative; display: flex; flex-direction: column; }
   </style>
 </head>
 <body>
@@ -417,10 +520,33 @@
 </section>
 
 <!-- Walica FAB -->
-<a class="walica-fab" href="https://walica.jp/group/01KXQ9M1WV2M9Q1WV98JN369C1" target="_blank" rel="noopener noreferrer">
+<button class="walica-fab" id="walicaFab">
   <span class="wf-i">💰</span>
   Walica
-</a>
+</button>
+
+<!-- Walica bottom sheet -->
+<div class="walica-backdrop" id="walicaBackdrop"></div>
+<div class="walica-sheet" id="walicaSheet">
+  <div class="ws-hd">
+    <span class="ws-hd-left">💰 Walica</span>
+    <a class="ws-ext" href="https://walica.jp/group/01KXQ9M1WV2M9Q1WV98JN369C1" target="_blank" rel="noopener">ブラウザで開く ↗</a>
+    <button class="ws-close" id="walicaClose">✕</button>
+  </div>
+  <div class="ws-iframe-wrap">
+    <div class="ws-loading" id="walicaLoading">
+      <div class="ws-spinner"></div>
+      <span>読み込み中...</span>
+    </div>
+    <iframe
+      class="ws-iframe"
+      id="walicaIframe"
+      src=""
+      allow="same-origin"
+      loading="lazy"
+    ></iframe>
+  </div>
+</div>
 
 <script>
 /* ── Section nav active tracking ── */
@@ -720,6 +846,36 @@ document.getElementById("restoreBtn").addEventListener("click", () => {
 });
 
 buildPacking();
+
+/* ── Walica sheet ── */
+const walicaUrl = "https://walica.jp/group/01KXQ9M1WV2M9Q1WV98JN369C1";
+const fab       = document.getElementById("walicaFab");
+const backdrop  = document.getElementById("walicaBackdrop");
+const sheet     = document.getElementById("walicaSheet");
+const closeBtn  = document.getElementById("walicaClose");
+const iframe    = document.getElementById("walicaIframe");
+const loading   = document.getElementById("walicaLoading");
+
+function openSheet() {
+  if (!iframe.src) {
+    loading.style.display = "flex";
+    iframe.src = walicaUrl;
+    iframe.addEventListener("load", () => { loading.style.display = "none"; }, { once: true });
+  }
+  backdrop.classList.add("open");
+  sheet.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeSheet() {
+  backdrop.classList.remove("open");
+  sheet.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+fab.addEventListener("click", openSheet);
+closeBtn.addEventListener("click", closeSheet);
+backdrop.addEventListener("click", closeSheet);
 </script>
 </body>
 </html>
