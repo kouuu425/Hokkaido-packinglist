@@ -431,7 +431,7 @@ const DAYS = [
       },
       { t: "夜", d: "札幌で飲み 🍻" },
     ],
-    links: [{ label: "🏠 宿 (Airbnb・札幌)", url: "https://www.airbnb.com/l/ohH70mvu" }],
+    links: [{ label: "🏠 宿 (Airbnb・札幌)", url: "https://www.airbnb.com/l/ohH70mvu" }, { label: "📍 地図", url: "https://maps.app.goo.gl/H9NTrrZR1b4mPbg17?g_st=ic", cls: "map" }],
   },
   {
     date: "2026-08-09", num: "9", wk: "SUN", month: "Aug",
@@ -440,7 +440,7 @@ const DAYS = [
       { t: "9:00",  d: "レンタカー出発（トヨタレンタカー札幌駅前店）", rsv: true, mapUrl: "https://maps.app.goo.gl/jnTwAcMAEVok9Pqt7?g_st=il" },
       { t: "14:20", d: "洞爺湖SUP 集合 / 14:30 開始（K-LABO）🏄", rsv: true, mapUrl: "https://maps.app.goo.gl/NGKSJWPosJmZbVPE6?g_st=ic" },
     ],
-    links: [{ label: "🏠 宿 (Airbnb・洞爺湖)", url: "https://www.airbnb.com/l/FKQr6pWi" }],
+    links: [{ label: "🏠 宿 (Airbnb・洞爺湖)", url: "https://www.airbnb.com/l/FKQr6pWi" }, { label: "📍 地図", url: "https://maps.app.goo.gl/yPDwWDrjoAmwftwY6?g_st=ic", cls: "map" }],
   },
   {
     date: "2026-08-10", num: "10", wk: "MON", month: "Aug",
@@ -449,7 +449,7 @@ const DAYS = [
       { t: "日中",  d: "室蘭・登別・苫小牧 観光 🗺️" },
       { t: "19:30", d: "サッポロビール園 🍺", rsv: true },
     ],
-    links: [{ label: "🏠 宿 (Airbnb・札幌)", url: "https://www.airbnb.com/l/h5kebnru" }],
+    links: [{ label: "🏠 宿 (Airbnb・札幌)", url: "https://www.airbnb.com/l/h5kebnru" }, { label: "📍 地図", url: "https://maps.app.goo.gl/9KQUfaAMn2zPWhdJ8?g_st=ic", cls: "map" }],
   },
   {
     date: "2026-08-11", num: "11", wk: "TUE", month: "Aug",
@@ -509,7 +509,7 @@ function renderAct(a) {
     card.className = "day-card" + (isToday ? " is-today" : "");
 
     const linksHtml = day.links.length
-      ? `<div class="day-links">${day.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener" class="pill">${l.label}</a>`).join("")}</div>`
+      ? `<div class="day-links">${day.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener" class="pill${l.cls ? " " + l.cls : ""}">${l.label}</a>`).join("")}</div>`
       : "";
 
     card.innerHTML = `
