@@ -16,6 +16,8 @@
       --border: #e5e7eb;
       --text: #111827;
       --text-sub: #6b7280;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
       --radius: 14px;
     }
 
@@ -24,30 +26,56 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100dvh;
-      padding: 0 0 80px;
+      padding: 0 0 90px;
     }
 
+    /* ── Header ── */
     header {
       background: var(--primary);
       color: #fff;
-      padding: 20px 16px 16px;
+      padding: 16px 16px 14px;
       position: sticky;
       top: 0;
       z-index: 10;
       box-shadow: 0 2px 8px rgba(0,0,0,.15);
     }
 
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
     header h1 {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       letter-spacing: .02em;
     }
 
-    header p {
+    header .subtitle {
       font-size: .78rem;
       opacity: .85;
       margin-top: 2px;
     }
+
+    .edit-toggle-btn {
+      flex-shrink: 0;
+      margin-left: 12px;
+      padding: 6px 14px;
+      background: rgba(255,255,255,.2);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,.5);
+      border-radius: 99px;
+      font-size: .85rem;
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .15s;
+      white-space: nowrap;
+    }
+
+    .edit-toggle-btn:active { background: rgba(255,255,255,.35); }
+    .edit-toggle-btn.done { background: rgba(255,255,255,.9); color: var(--primary); border-color: transparent; }
 
     .progress-wrap {
       margin-top: 12px;
@@ -79,12 +107,14 @@
       text-align: right;
     }
 
+    /* ── Main ── */
     main {
       padding: 12px 12px 0;
       max-width: 600px;
       margin: 0 auto;
     }
 
+    /* ── Category card ── */
     .category-card {
       background: var(--card);
       border-radius: var(--radius);
@@ -113,10 +143,6 @@
       font-weight: 700;
     }
 
-    .category-icon {
-      font-size: 1.1rem;
-    }
-
     .category-badge {
       font-size: .78rem;
       font-weight: 600;
@@ -128,10 +154,7 @@
       text-align: center;
     }
 
-    .category-badge.complete {
-      background: #dcfce7;
-      color: #16a34a;
-    }
+    .category-badge.complete { background: #dcfce7; color: #16a34a; }
 
     .chevron {
       font-size: .75rem;
@@ -141,8 +164,10 @@
     }
 
     .category-card.collapsed .chevron { transform: rotate(-90deg); }
-    .category-card.collapsed .item-list { display: none; }
+    .category-card.collapsed .item-list,
+    .category-card.collapsed .add-item-row { display: none; }
 
+    /* ── Item list ── */
     .item-list { list-style: none; }
 
     .item {
@@ -151,18 +176,24 @@
       gap: 12px;
       padding: 13px 16px;
       border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: background .15s;
       min-height: 52px;
+      transition: background .15s;
     }
 
-    .item:last-child { border-bottom: none; }
-    .item:active { background: #f9fafb; }
+    /* normal mode: whole row is tappable */
+    body:not(.edit-mode) .item {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body:not(.edit-mode) .item:active { background: #f9fafb; }
 
+    /* edit mode: row is not tappable */
+    body.edit-mode .item { cursor: default; }
+
+    /* ── Checkbox (normal mode) ── */
     .check-box {
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       border-radius: 7px;
       border: 2px solid #d1d5db;
       flex-shrink: 0;
@@ -172,57 +203,151 @@
       transition: all .15s;
     }
 
-    .item.checked .check-box {
-      background: var(--primary);
-      border-color: var(--primary);
-    }
+    body.edit-mode .check-box { display: none; }
+
+    .item.checked .check-box { background: var(--primary); border-color: var(--primary); }
 
     .check-mark {
       display: none;
       color: #fff;
       font-size: .8rem;
       font-weight: 800;
-      line-height: 1;
     }
 
     .item.checked .check-mark { display: block; }
 
+    /* ── Delete button (edit mode) ── */
+    .delete-btn {
+      display: none;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .15s;
+    }
+
+    body.edit-mode .delete-btn { display: flex; }
+    .delete-btn:active { background: #b91c1c; }
+
+    /* ── Item label ── */
     .item-label {
       font-size: .95rem;
       line-height: 1.4;
+      flex: 1;
       transition: color .15s;
     }
 
-    .item.checked .item-label {
+    body:not(.edit-mode) .item.checked .item-label {
       text-decoration: line-through;
       color: var(--checked-text);
     }
 
-    .reset-btn {
-      display: block;
-      width: calc(100% - 24px);
-      max-width: 576px;
-      margin: 4px auto 0;
-      padding: 15px;
+    /* ── Add item row (edit mode) ── */
+    .add-item-row {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    body.edit-mode .add-item-row { display: flex; }
+
+    .add-item-input {
+      flex: 1;
+      padding: 9px 12px;
+      font-size: .95rem;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      font-family: inherit;
+      color: var(--text);
       background: #fff;
-      color: #ef4444;
-      border: 2px solid #fecaca;
+      transition: border-color .15s;
+    }
+
+    .add-item-input:focus { border-color: var(--primary); }
+    .add-item-input::placeholder { color: #c4c8d0; }
+
+    .add-item-btn {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .15s;
+    }
+
+    .add-item-btn:active { background: #1d4ed8; }
+
+    /* ── Footer buttons ── */
+    .footer-btns {
+      padding: 8px 12px;
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .reset-btn, .restore-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
       border-radius: var(--radius);
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      transition: background .15s, border-color .15s;
       -webkit-tap-highlight-color: transparent;
+      transition: background .15s, border-color .15s;
     }
 
-    .reset-btn:active { background: #fff1f2; border-color: #ef4444; }
+    .reset-btn {
+      background: #fff;
+      color: var(--danger);
+      border: 2px solid #fecaca;
+    }
+    .reset-btn:active { background: var(--danger-light); border-color: var(--danger); }
+
+    .restore-btn {
+      display: none;
+      background: #fff;
+      color: var(--text-sub);
+      border: 2px solid var(--border);
+    }
+    .restore-btn:active { background: #f3f4f6; }
+
+    body.edit-mode .restore-btn { display: block; }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>🏔️ 北海道旅行 持ち物リスト</h1>
-  <p>3泊4日 ・ SUPあり</p>
+  <div class="header-top">
+    <div>
+      <h1>🏔️ 北海道旅行 持ち物リスト</h1>
+      <p class="subtitle">3泊4日 ・ SUPあり</p>
+    </div>
+    <button class="edit-toggle-btn" id="editToggleBtn">編集</button>
+  </div>
   <div class="progress-wrap">
     <div class="progress-bar-bg">
       <div class="progress-bar-fill" id="progressFill"></div>
@@ -233,97 +358,55 @@
 
 <main id="main"></main>
 
-<button class="reset-btn" id="resetBtn">↺ すべてリセット</button>
+<div class="footer-btns">
+  <button class="reset-btn" id="resetBtn">↺ チェックをリセット</button>
+  <button class="restore-btn" id="restoreBtn">⟳ デフォルトの項目に戻す</button>
+</div>
 
 <script>
-const CATEGORIES = [
+/* ── Default data ── */
+const DEFAULTS = [
   {
-    id: "clothes",
-    icon: "👕",
-    name: "衣類",
+    id: "clothes", icon: "👕", name: "衣類",
     items: [
-      "3日分の下着",
-      "3日分の洋服",
-      "スポーツ用シャツ (2枚)",
-      "パジャマ",
-      "羽織りもの (朝晩冷える対策)",
-      "水着",
-      "ラッシュガード",
-      "サンダル / マリンシューズ",
-      "帽子",
-      "サングラス",
+      "3日分の下着","3日分の洋服","スポーツ用シャツ (2枚)","パジャマ",
+      "羽織りもの (朝晩冷える対策)","水着","ラッシュガード",
+      "サンダル / マリンシューズ","帽子","サングラス",
     ],
   },
   {
-    id: "toiletry",
-    icon: "🧴",
-    name: "洗面・衛生用品",
+    id: "toiletry", icon: "🧴", name: "洗面・衛生用品",
     items: [
-      "シャンプー・リンス・ボディソープ",
-      "歯ブラシ・歯磨き粉",
-      "タオルハンカチ",
-      "バスタオル",
-      "速乾タオル",
-      "髭剃り",
-      "塗り薬",
-      "飲み薬",
-      "のど飴",
-      "鼻呼吸テープ",
-      "汗拭きシート",
+      "シャンプー・リンス・ボディソープ","歯ブラシ・歯磨き粉","タオルハンカチ",
+      "バスタオル","速乾タオル","髭剃り","塗り薬","飲み薬",
+      "のど飴","鼻呼吸テープ","汗拭きシート",
     ],
   },
   {
-    id: "electronics",
-    icon: "🔌",
-    name: "電子機器",
+    id: "electronics", icon: "🔌", name: "電子機器",
     items: [
-      "スマホ",
-      "モバイルバッテリー・充電器類",
-      "カメラ",
-      "イヤホン",
-      "スマートウォッチ",
-      "Switch のリモコン",
+      "スマホ","モバイルバッテリー・充電器類","カメラ",
+      "イヤホン","スマートウォッチ","Switch のリモコン",
     ],
   },
   {
-    id: "valuables",
-    icon: "💳",
-    name: "貴重品・書類",
+    id: "valuables", icon: "💳", name: "貴重品・書類",
+    items: ["財布","運転免許証 (レンタカー予定なら)"],
+  },
+  {
+    id: "bags", icon: "🎒", name: "バッグ・小物",
     items: [
-      "財布",
-      "運転免許証 (レンタカー予定なら)",
+      "スーツケース","少し大きめのカバン","ポーチ",
+      "防水ポーチ (スマホ・貴重品用)","エコバッグ",
+      "折りたたみ傘","日傘","スリッパ",
     ],
   },
   {
-    id: "bags",
-    icon: "🎒",
-    name: "バッグ・小物",
-    items: [
-      "スーツケース",
-      "少し大きめのカバン",
-      "ポーチ",
-      "防水ポーチ (スマホ・貴重品用)",
-      "エコバッグ",
-      "折りたたみ傘",
-      "日傘",
-      "スリッパ",
-    ],
+    id: "daily", icon: "🧻", name: "生活用品",
+    items: ["ゴミ袋","ティッシュ","マスク","ジップロック"],
   },
   {
-    id: "daily",
-    icon: "🧻",
-    name: "生活用品",
-    items: [
-      "ゴミ袋",
-      "ティッシュ",
-      "マスク",
-      "ジップロック",
-    ],
-  },
-  {
-    id: "other",
-    icon: "☀️",
-    name: "その他",
+    id: "other", icon: "☀️", name: "その他",
     items: [
       "日焼け止め (SUP用にウォータープルーフ推奨)",
       "雨具 (降水確率高め・折りたたみ傘で対応可)",
@@ -331,28 +414,58 @@ const CATEGORIES = [
   },
 ];
 
-const STORAGE_KEY = "hokkaido-packing-v1";
+/* ── Storage ── */
+const STORAGE_KEY = "hokkaido-packing-v2";
 
-function loadState() {
+function uid() {
+  return Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
+}
+
+function defaultItemsForCat(cat) {
+  return cat.items.map(label => ({ id: uid(), label }));
+}
+
+function loadStorage() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  } catch { return {}; }
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return null;
 }
 
-function saveState(state) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+function initStorage() {
+  const saved = loadStorage();
+  if (saved) return saved;
+  const data = { items: {}, checks: {} };
+  DEFAULTS.forEach(cat => { data.items[cat.id] = defaultItemsForCat(cat); });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  return data;
 }
 
-let state = loadState();
+let data = initStorage();
 
-function itemKey(catId, idx) { return `${catId}__${idx}`; }
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
 
+/* ── State helpers ── */
+let editMode = false;
+
+function getCatMeta(catId) {
+  return DEFAULTS.find(c => c.id === catId);
+}
+
+function getItems(catId) {
+  return data.items[catId] || [];
+}
+
+/* ── Progress ── */
 function updateProgress() {
   let total = 0, checked = 0;
-  CATEGORIES.forEach(cat => {
-    cat.items.forEach((_, i) => {
+  DEFAULTS.forEach(cat => {
+    getItems(cat.id).forEach(item => {
       total++;
-      if (state[itemKey(cat.id, i)]) checked++;
+      if (data.checks[item.id]) checked++;
     });
   });
   const pct = total === 0 ? 0 : Math.round(checked / total * 100);
@@ -361,63 +474,153 @@ function updateProgress() {
 }
 
 function updateCategoryBadge(catId) {
-  const cat = CATEGORIES.find(c => c.id === catId);
-  const total = cat.items.length;
-  const checked = cat.items.filter((_, i) => state[itemKey(catId, i)]).length;
+  const items = getItems(catId);
+  const total = items.length;
+  const checked = items.filter(it => data.checks[it.id]).length;
   const badge = document.querySelector(`.category-badge[data-cat="${catId}"]`);
+  if (!badge) return;
   badge.textContent = `${checked}/${total}`;
-  badge.classList.toggle("complete", checked === total);
+  badge.classList.toggle("complete", total > 0 && checked === total);
 }
 
-function toggleItem(catId, idx, el) {
-  const key = itemKey(catId, idx);
-  state[key] = !state[key];
-  saveState(state);
-  el.classList.toggle("checked", state[key]);
+/* ── Toggle check ── */
+function toggleItem(itemId, li) {
+  if (editMode) return;
+  data.checks[itemId] = !data.checks[itemId];
+  save();
+  li.classList.toggle("checked", !!data.checks[itemId]);
+  const catId = li.closest(".category-card").dataset.catId;
   updateCategoryBadge(catId);
   updateProgress();
 }
 
+/* ── Delete item ── */
+function deleteItem(catId, itemId) {
+  data.items[catId] = data.items[catId].filter(it => it.id !== itemId);
+  delete data.checks[itemId];
+  save();
+  updateCategoryBadge(catId);
+  updateProgress();
+}
+
+/* ── Add item ── */
+function addItem(catId, label) {
+  label = label.trim();
+  if (!label) return;
+  const newItem = { id: uid(), label };
+  data.items[catId].push(newItem);
+  save();
+  updateCategoryBadge(catId);
+  updateProgress();
+  return newItem;
+}
+
+/* ── Build a single item <li> ── */
+function buildItemEl(catId, item) {
+  const li = document.createElement("li");
+  li.className = "item";
+  if (data.checks[item.id]) li.classList.add("checked");
+  li.dataset.itemId = item.id;
+
+  const delBtn = document.createElement("button");
+  delBtn.className = "delete-btn";
+  delBtn.textContent = "−";
+  delBtn.setAttribute("aria-label", "削除");
+  delBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    li.remove();
+    deleteItem(catId, item.id);
+  });
+
+  const checkBox = document.createElement("span");
+  checkBox.className = "check-box";
+  checkBox.innerHTML = `<span class="check-mark">✓</span>`;
+
+  const labelEl = document.createElement("span");
+  labelEl.className = "item-label";
+  labelEl.textContent = item.label;
+
+  li.appendChild(delBtn);
+  li.appendChild(checkBox);
+  li.appendChild(labelEl);
+
+  li.addEventListener("click", () => toggleItem(item.id, li));
+
+  return li;
+}
+
+/* ── Build add-item row ── */
+function buildAddRow(catId, list) {
+  const row = document.createElement("div");
+  row.className = "add-item-row";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "add-item-input";
+  input.placeholder = "項目を追加...";
+  input.maxLength = 60;
+
+  const btn = document.createElement("button");
+  btn.className = "add-item-btn";
+  btn.textContent = "+";
+  btn.setAttribute("aria-label", "追加");
+
+  function commit() {
+    const label = input.value.trim();
+    if (!label) return;
+    const newItem = addItem(catId, label);
+    if (newItem) {
+      const li = buildItemEl(catId, newItem);
+      list.appendChild(li);
+    }
+    input.value = "";
+    input.focus();
+  }
+
+  btn.addEventListener("click", commit);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); commit(); } });
+
+  row.appendChild(input);
+  row.appendChild(btn);
+  return row;
+}
+
+/* ── Build full UI ── */
 function buildUI() {
   const main = document.getElementById("main");
   main.innerHTML = "";
 
-  CATEGORIES.forEach(cat => {
+  DEFAULTS.forEach(cat => {
     const card = document.createElement("div");
     card.className = "category-card";
     card.dataset.catId = cat.id;
 
+    /* header */
     const header = document.createElement("div");
     header.className = "category-header";
     header.innerHTML = `
       <span class="category-title">
-        <span class="category-icon">${cat.icon}</span>
-        ${cat.name}
+        <span>${cat.icon}</span>
+        <span>${cat.name}</span>
         <span class="chevron">▾</span>
       </span>
-      <span class="category-badge" data-cat="${cat.id}">0/${cat.items.length}</span>
+      <span class="category-badge" data-cat="${cat.id}">0/0</span>
     `;
-    header.addEventListener("click", () => {
-      card.classList.toggle("collapsed");
-    });
+    header.addEventListener("click", () => card.classList.toggle("collapsed"));
 
+    /* item list */
     const list = document.createElement("ul");
     list.className = "item-list";
 
-    cat.items.forEach((label, i) => {
-      const li = document.createElement("li");
-      li.className = "item";
-      if (state[itemKey(cat.id, i)]) li.classList.add("checked");
-      li.innerHTML = `
-        <span class="check-box"><span class="check-mark">✓</span></span>
-        <span class="item-label">${label}</span>
-      `;
-      li.addEventListener("click", () => toggleItem(cat.id, i, li));
-      list.appendChild(li);
+    getItems(cat.id).forEach(item => {
+      list.appendChild(buildItemEl(cat.id, item));
     });
+
+    const addRow = buildAddRow(cat.id, list);
 
     card.appendChild(header);
     card.appendChild(list);
+    card.appendChild(addRow);
     main.appendChild(card);
 
     updateCategoryBadge(cat.id);
@@ -426,13 +629,36 @@ function buildUI() {
   updateProgress();
 }
 
+/* ── Edit mode toggle ── */
+const editToggleBtn = document.getElementById("editToggleBtn");
+
+editToggleBtn.addEventListener("click", () => {
+  editMode = !editMode;
+  document.body.classList.toggle("edit-mode", editMode);
+  editToggleBtn.textContent = editMode ? "完了" : "編集";
+  editToggleBtn.classList.toggle("done", editMode);
+});
+
+/* ── Reset checks ── */
 document.getElementById("resetBtn").addEventListener("click", () => {
   if (!confirm("チェックをすべてリセットしますか？")) return;
-  state = {};
-  saveState(state);
+  data.checks = {};
+  save();
+  document.querySelectorAll(".item.checked").forEach(el => el.classList.remove("checked"));
+  DEFAULTS.forEach(cat => updateCategoryBadge(cat.id));
+  updateProgress();
+});
+
+/* ── Restore defaults ── */
+document.getElementById("restoreBtn").addEventListener("click", () => {
+  if (!confirm("項目をデフォルトに戻しますか？\nチェック状態もリセットされます。")) return;
+  data = { items: {}, checks: {} };
+  DEFAULTS.forEach(cat => { data.items[cat.id] = defaultItemsForCat(cat); });
+  save();
   buildUI();
 });
 
+/* ── Init ── */
 buildUI();
 </script>
 </body>
