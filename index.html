@@ -700,15 +700,19 @@ document.getElementById("restoreBtn").addEventListener("click", () => {
 /* ── Packing section toggle ── */
 const packBody = document.getElementById("pack-body");
 const packChev = document.getElementById("packChev");
-let packOpen = false;
+let packOpen = localStorage.getItem("hokkaido-pack-open") === "1";
 
-packBody.style.display = "none";
-packChev.style.transform = "rotate(-90deg)";
+function applyPackState() {
+  packBody.style.display = packOpen ? "block" : "none";
+  packChev.style.transform = packOpen ? "rotate(0deg)" : "rotate(-90deg)";
+}
+
+applyPackState();
 
 document.getElementById("packToggle").addEventListener("click", () => {
   packOpen = !packOpen;
-  packBody.style.display = packOpen ? "block" : "none";
-  packChev.style.transform = packOpen ? "rotate(0deg)" : "rotate(-90deg)";
+  localStorage.setItem("hokkaido-pack-open", packOpen ? "1" : "0");
+  applyPackState();
 });
 
 buildPacking();
