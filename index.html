@@ -2,799 +2,1035 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>北海道旅行 8/8-8/11</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>北海道 Aug 8–11</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #eef6fb;
-      --card: #ffffff;
-      --primary: #0369a1;
-      --primary-dk: #0c4a6e;
-      --primary-lt: #e0f2fe;
-      --lavender: #6d28d9;
-      --lavender-lt: #ede9fe;
-      --green: #15803d;
-      --green-lt: #dcfce7;
-      --amber: #d97706;
-      --amber-lt: #fef3c7;
-      --checked-text: #9ca3af;
-      --border: #dde8f0;
-      --text: #0f172a;
-      --text-sub: #64748b;
-      --danger: #ef4444;
-      --danger-lt: #fef2f2;
-      --radius: 14px;
+      --bg:      #faf8f4;
+      --surf:    #ffffff;
+      --hero:    #18243c;
+      --text:    #1a1f2e;
+      --muted:   #9c9790;
+      --border:  #e8e2d8;
+      --blue:    #3a6694;
+      --green:   #4a7c5a;
+      --amber:   #bf7e38;
+      --red:     #bf5044;
     }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+                   "Yu Gothic UI", "Meiryo", sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100dvh;
-      padding-bottom: 60px;
+      /* bottom nav + safe area */
+      padding-bottom: calc(58px + env(safe-area-inset-bottom));
     }
 
-    /* ── Header ── */
-    header {
-      background: linear-gradient(155deg, #082f49 0%, #0369a1 55%, #2563eb 100%);
+    /* ─────────────────────────────
+       HERO
+    ───────────────────────────── */
+    .hero {
+      background: var(--hero);
       color: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 14px rgba(3,105,161,.4);
+      padding: 32px 20px 0;
+      position: relative;
+      overflow: hidden;
     }
 
-    .header-main { padding: 14px 16px 10px; }
+    .hero-snow {
+      font-size: .65rem;
+      letter-spacing: .22em;
+      opacity: .45;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
 
-    .header-title {
-      font-size: 1.15rem;
+    .hero-title {
+      font-size: 3rem;
       font-weight: 800;
-      letter-spacing: .03em;
+      letter-spacing: -.02em;
+      line-height: 1;
+      margin-bottom: 10px;
     }
 
-    .header-sub {
-      font-size: .78rem;
-      opacity: .82;
-      margin-top: 3px;
-      letter-spacing: .04em;
+    .hero-title span {
+      font-weight: 300;
+      opacity: .55;
+      font-size: 2.4rem;
     }
 
-    /* ── Tab bar ── */
-    .tab-bar {
+    .hero-sub {
+      font-size: .82rem;
+      letter-spacing: .1em;
+      opacity: .6;
+      margin-bottom: 28px;
+    }
+
+    .hero-mtn {
+      display: block;
+      width: 100%;
+      margin-top: -4px;
+    }
+
+    /* ─────────────────────────────
+       BOTTOM NAV
+    ───────────────────────────── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
       display: flex;
-      background: rgba(0,0,0,.18);
-      border-top: 1px solid rgba(255,255,255,.12);
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
-    .tab-btn {
+    .nav-btn {
       flex: 1;
-      padding: 8px 2px 7px;
-      background: none;
-      border: none;
-      border-bottom: 3px solid transparent;
-      color: rgba(255,255,255,.6);
-      font-size: .68rem;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      justify-content: center;
+      gap: 3px;
+      padding: 8px 2px 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--muted);
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .04em;
       -webkit-tap-highlight-color: transparent;
-      transition: color .15s, border-color .15s;
-      letter-spacing: .02em;
+      transition: color .15s;
     }
 
-    .tab-btn .ti { font-size: 1.1rem; }
-    .tab-btn.active { color: #fff; border-bottom-color: #fff; }
+    .nav-btn .ni { font-size: 1.1rem; line-height: 1; }
+    .nav-btn.active { color: var(--blue); }
 
-    /* ── Panes ── */
-    .tab-pane { display: none; }
-    .tab-pane.active { display: block; }
-
-    .sec { padding: 12px 12px 0; max-width: 600px; margin: 0 auto; }
-
-    /* ── Generic card ── */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      margin-bottom: 12px;
-      overflow: hidden;
-      box-shadow: 0 1px 6px rgba(0,0,0,.07);
+    /* ─────────────────────────────
+       CONTENT
+    ───────────────────────────── */
+    .pane { display: none; }
+    .pane.active {
+      display: block;
+      animation: fadeUp .22s cubic-bezier(.22,1,.36,1);
     }
 
-    /* ── Section label ── */
-    .sec-label {
-      font-size: .68rem;
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .wrap {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px 18px 0;
+    }
+
+    /* ─────────────────────────────
+       SECTION LABEL
+    ───────────────────────────── */
+    .sec-lbl {
+      font-size: .65rem;
       font-weight: 800;
-      letter-spacing: .1em;
-      color: var(--text-sub);
+      letter-spacing: .18em;
       text-transform: uppercase;
-      padding: 12px 2px 5px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sec-lbl::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
 
-    /* ── Map / big link button ── */
+    /* ─────────────────────────────
+       BIG LINK BUTTON (maps)
+    ───────────────────────────── */
     .big-link {
       display: flex;
       align-items: center;
-      gap: 11px;
-      width: 100%;
-      padding: 14px 16px;
-      background: var(--card);
-      border: 2px solid var(--primary-lt);
-      border-radius: var(--radius);
-      color: var(--primary);
-      font-size: .95rem;
-      font-weight: 700;
-      text-decoration: none;
-      box-shadow: 0 1px 6px rgba(0,0,0,.06);
-      margin-bottom: 12px;
-      -webkit-tap-highlight-color: transparent;
-      transition: background .15s;
-    }
-    .big-link:active { background: var(--primary-lt); }
-    .big-link .bli { font-size: 1.3rem; }
-    .big-link .bls { font-size: .74rem; color: var(--text-sub); font-weight: 400; margin-top: 1px; }
-    .big-link .bla { margin-left: auto; color: var(--text-sub); font-size: .85rem; }
-
-    /* ── Warica button ── */
-    .warica-btn {
-      display: flex;
-      align-items: center;
       gap: 12px;
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
-      border: none;
-      border-radius: var(--radius);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 800;
+      background: var(--surf);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 15px;
       text-decoration: none;
-      box-shadow: 0 3px 14px rgba(109,40,217,.35);
-      margin-bottom: 12px;
+      color: var(--text);
+      margin-bottom: 22px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
       -webkit-tap-highlight-color: transparent;
-      transition: opacity .15s;
-      font-family: inherit;
+      transition: background .12s;
     }
-    .warica-btn:active { opacity: .85; }
-    .warica-btn .wbi { font-size: 1.5rem; }
-    .warica-btn .wbs { font-size: .78rem; opacity: .82; font-weight: 400; margin-top: 1px; }
-    .warica-btn .wba { margin-left: auto; opacity: .7; font-size: .85rem; }
+    .big-link:active { background: #f3ede4; }
+    .big-link .bli { font-size: 1.25rem; }
+    .big-link .blt { font-size: .9rem; font-weight: 700; }
+    .big-link .bls { font-size: .72rem; color: var(--muted); margin-top: 1px; }
+    .big-link .bla { margin-left: auto; color: var(--muted); font-size: .85rem; }
 
-    /* ── Day cards ── */
-    .day-card { border-left: 4px solid var(--primary); }
-    .day-card.is-today { border-left-color: #f59e0b; box-shadow: 0 2px 14px rgba(245,158,11,.2); }
+    /* ─────────────────────────────
+       DAY CARDS (itinerary)
+    ───────────────────────────── */
+    .day-card {
+      background: var(--surf);
+      border-radius: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 5px rgba(0,0,0,.06), 0 0 0 1px var(--border);
+      overflow: hidden;
+    }
 
-    .day-hd {
-      padding: 11px 14px 9px;
-      border-bottom: 1px solid var(--border);
+    .day-top {
       display: flex;
-      justify-content: space-between;
       align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px 12px;
     }
 
-    .day-date {
-      font-size: 1rem;
+    .day-num-blk {
+      flex-shrink: 0;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .day-num {
+      font-size: 2.4rem;
       font-weight: 800;
-      color: var(--primary-dk);
+      color: var(--blue);
+      letter-spacing: -.03em;
+      line-height: 1;
+    }
+
+    .day-card.is-today .day-num { color: var(--amber); }
+
+    .day-wk {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .day-info { flex: 1; padding-top: 4px; }
+
+    .day-month {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      color: var(--muted);
+      text-transform: uppercase;
     }
 
     .day-route {
-      font-size: .78rem;
-      color: var(--text-sub);
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--text);
       margin-top: 2px;
+      line-height: 1.3;
     }
 
-    .today-badge {
-      background: #f59e0b;
+    .today-tag {
+      display: inline-block;
+      background: var(--amber);
       color: #fff;
-      font-size: .68rem;
+      font-size: .62rem;
       font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 99px;
-      letter-spacing: .05em;
-      flex-shrink: 0;
-      margin-top: 2px;
+      letter-spacing: .08em;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-top: 5px;
     }
 
-    .day-bd { padding: 10px 14px 12px; }
+    .day-divider { height: 1px; background: var(--border); margin: 0 16px; }
+
+    .day-acts { padding: 10px 16px 6px; }
 
     .act-row {
       display: flex;
+      gap: 10px;
       align-items: flex-start;
-      gap: 9px;
       padding: 5px 0;
     }
 
     .act-time {
-      font-size: .75rem;
+      font-size: .72rem;
       font-weight: 700;
-      color: var(--text-sub);
-      min-width: 40px;
+      color: var(--muted);
+      min-width: 38px;
       padding-top: 2px;
       white-space: nowrap;
+      font-variant-numeric: tabular-nums;
     }
 
-    .act-body { flex: 1; }
+    .act-content { flex: 1; }
 
     .act-text {
-      font-size: .9rem;
+      font-size: .88rem;
       line-height: 1.45;
-      color: var(--text);
     }
 
-    .rsv-badge {
+    .rsv {
       display: inline-block;
-      background: var(--green-lt);
+      background: #e7f3eb;
       color: var(--green);
-      font-size: .64rem;
+      font-size: .6rem;
       font-weight: 800;
-      padding: 1px 6px;
-      border-radius: 4px;
+      letter-spacing: .04em;
+      padding: 1px 5px;
+      border-radius: 3px;
       margin-left: 5px;
-      vertical-align: middle;
-      letter-spacing: .02em;
+      vertical-align: 1px;
     }
 
     .day-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 7px;
-      margin-top: 10px;
+      gap: 6px;
+      padding: 8px 16px 14px;
     }
 
-    .pill-link {
+    .pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 7px 13px;
-      background: var(--primary-lt);
-      color: var(--primary);
-      border: 1.5px solid rgba(3,105,161,.18);
+      gap: 4px;
+      padding: 6px 12px;
       border-radius: 99px;
-      font-size: .82rem;
-      font-weight: 700;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: .8rem;
+      font-weight: 600;
       text-decoration: none;
       -webkit-tap-highlight-color: transparent;
-      transition: background .15s;
+      transition: background .12s;
     }
-    .pill-link:active { background: #bae6fd; }
-    .pill-link.green { background: var(--green-lt); color: var(--green); border-color: rgba(21,128,61,.18); }
-    .pill-link.green:active { background: #bbf7d0; }
+    .pill:active { background: #eee8de; }
+    .pill.green { color: var(--green); border-color: #b8d9c2; background: #f0f8f2; }
+    .pill.green:active { background: #d8edd e; }
 
-    /* ── Flight cards ── */
-    .flt-card { padding: 14px 16px; }
-    .flt-dir { font-size: .68rem; font-weight: 800; letter-spacing: .08em; color: var(--text-sub); text-transform: uppercase; margin-bottom: 10px; }
-
-    .flt-route {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .flt-ap { text-align: center; }
-    .flt-code { font-size: 1.3rem; font-weight: 900; color: var(--primary-dk); letter-spacing: .03em; }
-    .flt-city { font-size: .68rem; color: var(--text-sub); }
-    .flt-time { font-size: .95rem; font-weight: 700; color: var(--text); }
-
-    .flt-mid {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .flt-line {
-      width: 100%;
-      height: 1.5px;
-      background: var(--border);
-      position: relative;
-    }
-    .flt-line::after {
-      content: "✈";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-      font-size: .85rem;
-      background: var(--card);
-      padding: 0 5px;
-      color: var(--primary);
-    }
-
-    .flt-dur { font-size: .7rem; color: var(--text-sub); }
-
-    .flt-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-    .flt-tag {
-      background: var(--primary-lt);
-      color: var(--primary-dk);
-      font-size: .74rem;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 6px;
-    }
-
-    /* ── Baggage warning ── */
+    /* ─────────────────────────────
+       BAGGAGE WARNING
+    ───────────────────────────── */
     .bag-warn {
-      background: var(--amber-lt);
-      border: 1.5px solid #fcd34d;
-      border-radius: var(--radius);
-      padding: 13px 15px;
-      margin-bottom: 12px;
+      border-left: 3px solid var(--amber);
+      background: #fdf7ee;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 14px;
+      margin-bottom: 20px;
     }
+
     .bag-warn-ttl {
-      font-size: .9rem;
+      font-size: .82rem;
       font-weight: 800;
-      color: #92400e;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      color: var(--amber);
+      margin-bottom: 6px;
     }
-    .bag-warn ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+
     .bag-warn li {
-      font-size: .85rem;
-      color: #78350f;
-      padding-left: 14px;
+      list-style: none;
+      font-size: .82rem;
+      color: #7a6a3a;
+      line-height: 1.5;
+      padding-left: 10px;
       position: relative;
-      line-height: 1.4;
     }
-    .bag-warn li::before { content: "•"; position: absolute; left: 3px; color: var(--amber); }
+    .bag-warn li::before { content: "·"; position: absolute; left: 0; font-weight: 700; }
 
-    /* ── Activity detail ── */
-    .act-detail { padding: 14px 16px; }
-    .act-detail-ttl { font-size: 1rem; font-weight: 800; color: var(--primary-dk); margin-bottom: 10px; }
-    .det-row {
-      display: flex;
-      gap: 10px;
-      padding: 6px 0;
-      border-bottom: 1px solid var(--border);
-      align-items: flex-start;
-    }
-    .det-row:last-child { border-bottom: none; }
-    .det-lbl { font-size: .74rem; font-weight: 700; color: var(--text-sub); min-width: 58px; padding-top: 1px; }
-    .det-val { font-size: .88rem; color: var(--text); flex: 1; line-height: 1.45; }
-
-    /* ── Packing sub-header ── */
-    .pack-hd {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 12px 15px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 1px 6px rgba(0,0,0,.07);
-    }
-    .prog-wrap { flex: 1; display: flex; align-items: center; gap: 9px; }
-    .prog-bg { flex: 1; height: 8px; background: var(--primary-lt); border-radius: 99px; overflow: hidden; }
-    .prog-fill { height: 100%; background: var(--primary); border-radius: 99px; transition: width .3s ease; width: 0%; }
-    .prog-pct { font-size: .85rem; font-weight: 700; color: var(--primary); min-width: 36px; }
-
-    .edit-btn {
-      flex-shrink: 0;
-      padding: 7px 14px;
-      background: var(--primary-lt);
-      color: var(--primary);
-      border: 1.5px solid rgba(3,105,161,.22);
-      border-radius: 99px;
-      font-size: .85rem;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      -webkit-tap-highlight-color: transparent;
-      transition: background .15s;
-      white-space: nowrap;
-    }
-    .edit-btn:active { background: #bae6fd; }
-    .edit-btn.done { background: var(--primary); color: #fff; border-color: transparent; }
-
-    /* ── Category cards ── */
-    .category-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      margin-bottom: 12px;
+    /* ─────────────────────────────
+       BOARDING PASS (flights)
+    ───────────────────────────── */
+    .boarding-pass {
+      background: var(--surf);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.09), 0 0 0 1px var(--border);
       overflow: hidden;
-      box-shadow: 0 1px 6px rgba(0,0,0,.07);
     }
 
-    .category-header {
+    .bp-header {
+      background: var(--hero);
+      color: #fff;
+      padding: 10px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 16px;
-      background: #f8fafc;
-      border-bottom: 1px solid var(--border);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .bp-airline {
+      opacity: .65;
+      font-weight: 400;
+      letter-spacing: .04em;
+    }
+
+    .bp-route {
+      display: flex;
+      align-items: center;
+      padding: 18px 16px 14px;
+      gap: 0;
+    }
+
+    .bp-ap { flex: 1; }
+    .bp-ap.right { text-align: right; }
+
+    .bp-code {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -.02em;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .bp-city {
+      font-size: .7rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .bp-time {
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bp-mid {
+      flex: 1.2;
+      text-align: center;
+      padding: 0 8px;
+    }
+
+    .bp-arrow {
+      font-size: .75rem;
+      color: var(--muted);
+      letter-spacing: .2em;
+    }
+
+    .bp-dur {
+      font-size: .68rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .bp-tear {
+      height: 1px;
+      margin: 0 -1px;
+      border: none;
+      border-top: 1.5px dashed var(--border);
+      position: relative;
+    }
+
+    .bp-footer {
+      padding: 10px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .bp-tag {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: .03em;
+    }
+
+    /* ─────────────────────────────
+       PACKING LIST
+    ───────────────────────────── */
+    .pack-prog-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .pack-prog-lbl {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .pack-prog-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pack-prog-pct {
+      font-size: .78rem;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .pack-edit-btn {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--blue);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: .04em;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      opacity: .85;
+    }
+
+    .pack-edit-btn:active { opacity: 1; }
+
+    .pack-prog-track {
+      height: 3px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 22px;
+    }
+
+    .pack-prog-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 99px;
+      width: 0%;
+      transition: width .3s ease;
+    }
+
+    /* Category section */
+    .cat-hd {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 18px 0 8px;
       cursor: pointer;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .category-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: .95rem;
-      font-weight: 700;
+    .cat-icon { font-size: .95rem; }
+
+    .cat-name {
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
-    .category-badge {
-      font-size: .77rem;
-      font-weight: 700;
-      padding: 2px 9px;
-      border-radius: 99px;
-      background: var(--primary-lt);
-      color: var(--primary);
-      min-width: 42px;
-      text-align: center;
-    }
-    .category-badge.complete { background: var(--green-lt); color: var(--green); }
+    .cat-rule { flex: 1; height: 1px; background: var(--border); }
 
-    .chevron {
-      font-size: .74rem;
-      color: var(--text-sub);
-      transition: transform .2s;
-      margin-left: 3px;
+    .cat-badge {
+      font-size: .7rem;
+      font-weight: 800;
+      color: var(--blue);
     }
-    .category-card.collapsed .chevron { transform: rotate(-90deg); }
-    .category-card.collapsed .item-list,
-    .category-card.collapsed .add-item-row { display: none; }
 
-    /* ── Items ── */
+    .cat-badge.done { color: var(--green); }
+
+    .cat-chev {
+      font-size: .65rem;
+      color: var(--muted);
+      transition: transform .18s;
+    }
+
+    .cat-block.collapsed .cat-chev { transform: rotate(-90deg); }
+    .cat-block.collapsed .item-list,
+    .cat-block.collapsed .add-row { display: none; }
+
+    /* Items */
     .item-list { list-style: none; }
 
     .item {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 13px 16px;
+      padding: 11px 2px;
       border-bottom: 1px solid var(--border);
-      min-height: 52px;
-      transition: background .15s;
+      transition: opacity .12s;
     }
 
-    body:not(.edit-mode) .item { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    body:not(.edit-mode) .item:active { background: #f8fafc; }
+    .item:last-child { border-bottom: none; }
+
+    body:not(.edit-mode) .item {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body:not(.edit-mode) .item:active { opacity: .65; }
     body.edit-mode .item { cursor: default; }
 
-    .check-box {
-      width: 26px;
-      height: 26px;
-      border-radius: 7px;
-      border: 2px solid #cbd5e1;
+    .chk {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1.5px solid #cbc6bd;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all .15s;
+      transition: all .12s;
     }
-    body.edit-mode .check-box { display: none; }
-    .item.checked .check-box { background: var(--primary); border-color: var(--primary); }
 
-    .check-mark { display: none; color: #fff; font-size: .8rem; font-weight: 800; }
-    .item.checked .check-mark { display: block; }
+    body.edit-mode .chk { display: none; }
 
-    .delete-btn {
+    .item.checked .chk {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .chk-mark { display: none; color: #fff; font-size: .75rem; font-weight: 900; }
+    .item.checked .chk-mark { display: block; }
+
+    .del-btn {
       display: none;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       flex-shrink: 0;
       border-radius: 50%;
-      background: var(--danger);
+      background: var(--red);
       color: #fff;
       border: none;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       align-items: center;
       justify-content: center;
       -webkit-tap-highlight-color: transparent;
-      transition: background .15s;
     }
-    body.edit-mode .delete-btn { display: flex; }
-    .delete-btn:active { background: #b91c1c; }
+    body.edit-mode .del-btn { display: flex; }
+    .del-btn:active { opacity: .75; }
 
-    .item-label { font-size: .93rem; line-height: 1.4; flex: 1; transition: color .15s; }
-    body:not(.edit-mode) .item.checked .item-label { text-decoration: line-through; color: var(--checked-text); }
+    .item-lbl {
+      font-size: .9rem;
+      line-height: 1.4;
+      flex: 1;
+    }
 
-    /* ── Add-item row ── */
-    .add-item-row {
+    body:not(.edit-mode) .item.checked .item-lbl {
+      text-decoration: line-through;
+      color: #bbb6ae;
+    }
+
+    /* Add row */
+    .add-row {
       display: none;
       align-items: center;
-      gap: 9px;
-      padding: 9px 13px;
-      border-top: 1px solid var(--border);
+      gap: 8px;
+      padding: 8px 0;
     }
-    body.edit-mode .add-item-row { display: flex; }
 
-    .add-item-input {
+    body.edit-mode .add-row { display: flex; }
+
+    .add-input {
       flex: 1;
-      padding: 9px 12px;
-      font-size: .93rem;
+      padding: 8px 11px;
+      font-size: .9rem;
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: 8px;
       outline: none;
       font-family: inherit;
       color: var(--text);
-      background: #fff;
-      transition: border-color .15s;
+      background: var(--surf);
     }
-    .add-item-input:focus { border-color: var(--primary); }
-    .add-item-input::placeholder { color: #c4c8d0; }
 
-    .add-item-btn {
-      width: 36px;
-      height: 36px;
+    .add-input:focus { border-color: var(--blue); }
+    .add-input::placeholder { color: #ccc7be; }
+
+    .add-btn {
+      width: 34px;
+      height: 34px;
       flex-shrink: 0;
       border-radius: 50%;
-      background: var(--primary);
+      background: var(--blue);
       color: #fff;
       border: none;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      -webkit-tap-highlight-color: transparent;
-      transition: background .15s;
-    }
-    .add-item-btn:active { background: #075985; }
-
-    /* ── Footer buttons ── */
-    .footer-btns { padding: 8px 12px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
-
-    .reset-btn, .restore-btn {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      border-radius: var(--radius);
-      font-size: .95rem;
-      font-weight: 700;
-      cursor: pointer;
       font-family: inherit;
-      -webkit-tap-highlight-color: transparent;
-      transition: background .15s, border-color .15s;
     }
-    .reset-btn { background: #fff; color: var(--danger); border: 2px solid #fecaca; }
-    .reset-btn:active { background: var(--danger-lt); border-color: var(--danger); }
-    .restore-btn { display: none; background: #fff; color: var(--text-sub); border: 2px solid var(--border); }
-    .restore-btn:active { background: #f1f5f9; }
-    body.edit-mode .restore-btn { display: block; }
+
+    .add-btn:active { opacity: .75; }
+
+    /* Pack footer */
+    .pack-footer {
+      padding: 24px 0 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .txt-btn {
+      padding: 12px;
+      font-size: .85rem;
+      font-weight: 700;
+      font-family: inherit;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .12s;
+    }
+    .txt-btn:active { background: #f0ebe3; }
+    .txt-btn.danger { color: var(--red); border-color: #e4c4be; }
+    .txt-btn:not(.danger) { display: none; }
+    body.edit-mode .txt-btn:not(.danger) { display: block; }
+
+    /* ─────────────────────────────
+       WARICA & OTHER
+    ───────────────────────────── */
+    .warica-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #3b1f8c;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 22px;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 3px 14px rgba(59,31,140,.28);
+      transition: opacity .12s;
+    }
+    .warica-btn:active { opacity: .85; }
+    .warica-btn .wi { font-size: 1.4rem; }
+    .warica-btn .wt { font-size: .95rem; font-weight: 800; }
+    .warica-btn .ws { font-size: .74rem; opacity: .7; font-weight: 400; margin-top: 1px; }
+    .warica-btn .wa { margin-left: auto; opacity: .5; }
+
+    /* Activity detail */
+    .act-detail {
+      background: var(--surf);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 5px rgba(0,0,0,.06), 0 0 0 1px var(--border);
+    }
+
+    .act-detail-ttl {
+      padding: 13px 16px 11px;
+      border-bottom: 1px solid var(--border);
+      font-size: .95rem;
+      font-weight: 800;
+    }
+
+    .det-row {
+      display: flex;
+      gap: 12px;
+      padding: 9px 16px;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .det-row:last-child { border-bottom: none; }
+
+    .det-k {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      color: var(--muted);
+      min-width: 54px;
+      padding-top: 1px;
+    }
+
+    .det-v { font-size: .86rem; color: var(--text); flex: 1; line-height: 1.45; }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-main">
-    <div class="header-title">🏔️ 北海道旅行 8/8–8/11</div>
-    <div class="header-sub">❄️ 札幌 · 洞爺湖 · 3泊4日</div>
-  </div>
-  <nav class="tab-bar">
-    <button class="tab-btn active" data-tab="itinerary"><span class="ti">🗓</span>旅程</button>
-    <button class="tab-btn" data-tab="flight"><span class="ti">✈️</span>フライト</button>
-    <button class="tab-btn" data-tab="packing"><span class="ti">🎒</span>持ち物</button>
-    <button class="tab-btn" data-tab="other"><span class="ti">☀️</span>その他</button>
-  </nav>
+<!-- ── Hero ── -->
+<header class="hero">
+  <p class="hero-snow">❄ HOKKAIDO TRIP 2026</p>
+  <h1 class="hero-title">Aug 8 <span>– 11</span></h1>
+  <p class="hero-sub">札幌 · 洞爺湖 · 3泊4日</p>
+  <svg class="hero-mtn" viewBox="0 0 375 72" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,72 L48,26 L88,44 L138,8 L192,40 L244,16 L292,38 L336,20 L375,30 L375,72 Z"
+          fill="rgba(255,255,255,0.04)"/>
+    <path d="M0,72 L32,50 L78,60 L124,32 L174,54 L226,30 L278,50 L325,38 L375,46 L375,72 Z"
+          fill="rgba(255,255,255,0.07)"/>
+    <path d="M0,72 L0,64 Q60,57 120,61 Q180,65 240,59 Q300,53 375,60 L375,72 Z"
+          fill="#faf8f4"/>
+  </svg>
 </header>
 
-<!-- ══ 旅程 ══ -->
-<div id="tab-itinerary" class="tab-pane active">
-  <div class="sec">
+<!-- ── Panes ── -->
+
+<!-- 旅程 -->
+<div id="pane-itinerary" class="pane active">
+  <div class="wrap">
     <a class="big-link" href="https://maps.app.goo.gl/g3pKnpq2W5jzeUaJ9?g_st=i" target="_blank" rel="noopener">
       <span class="bli">📍</span>
-      <div><div>ほっかいどう · Ko</div><div class="bls">行きたい場所・立ち寄りスポット一覧 (Googleマップ)</div></div>
+      <div>
+        <div class="blt">ほっかいどう · Ko</div>
+        <div class="bls">行きたい場所・立ち寄りスポット一覧</div>
+      </div>
       <span class="bla">↗</span>
     </a>
     <div id="itinerary-cards"></div>
   </div>
 </div>
 
-<!-- ══ フライト ══ -->
-<div id="tab-flight" class="tab-pane">
-  <div class="sec">
+<!-- フライト -->
+<div id="pane-flight" class="pane">
+  <div class="wrap">
     <div class="bag-warn">
-      <div class="bag-warn-ttl">⚠️ 手荷物制限（要確認）</div>
+      <p class="bag-warn-ttl">⚠ 手荷物制限（要確認）</p>
       <ul>
         <li>身の回り品 1個 — 前の座席の下に収納</li>
-        <li>機内持ち込み手荷物 1個 — 23×36×56 cm 以内 · 最大 5 kg</li>
+        <li>機内持ち込み手荷物 1個 — 23×36×56 cm 以内、最大 5 kg</li>
       </ul>
     </div>
 
-    <div class="sec-label">往路</div>
-    <div class="card flt-card">
-      <div class="flt-dir">往路 · 8/8 (土)</div>
-      <div class="flt-route">
-        <div class="flt-ap">
-          <div class="flt-code">NRT</div>
-          <div class="flt-city">成田</div>
-          <div class="flt-time">16:50</div>
+    <div class="sec-lbl">往路</div>
+    <div class="boarding-pass">
+      <div class="bp-header">
+        <span>往路 · 2026/08/08</span>
+        <span class="bp-airline">Spring Airlines Japan</span>
+      </div>
+      <div class="bp-route">
+        <div class="bp-ap">
+          <div class="bp-code">NRT</div>
+          <div class="bp-city">成田</div>
+          <div class="bp-time">16:50</div>
         </div>
-        <div class="flt-mid">
-          <div class="flt-line"></div>
-          <div class="flt-dur">1時間45分</div>
+        <div class="bp-mid">
+          <div class="bp-arrow">· · · ✈ · · ·</div>
+          <div class="bp-dur">1 h 45 m</div>
         </div>
-        <div class="flt-ap" style="text-align:right">
-          <div class="flt-code">CTS</div>
-          <div class="flt-city">新千歳</div>
-          <div class="flt-time">18:35</div>
+        <div class="bp-ap right">
+          <div class="bp-code">CTS</div>
+          <div class="bp-city">新千歳</div>
+          <div class="bp-time">18:35</div>
         </div>
       </div>
-      <div class="flt-tags">
-        <span class="flt-tag">IJ 835</span>
-        <span class="flt-tag">Spring Airlines Japan</span>
-        <span class="flt-tag">エコノミー</span>
+      <hr class="bp-tear" />
+      <div class="bp-footer">
+        <span class="bp-tag">IJ 835</span>
+        <span class="bp-tag">エコノミー</span>
       </div>
     </div>
 
-    <div class="sec-label">復路</div>
-    <div class="card flt-card">
-      <div class="flt-dir">復路 · 8/11 (火)</div>
-      <div class="flt-route">
-        <div class="flt-ap">
-          <div class="flt-code">CTS</div>
-          <div class="flt-city">新千歳</div>
-          <div class="flt-time">11:25</div>
+    <div class="sec-lbl">復路</div>
+    <div class="boarding-pass">
+      <div class="bp-header">
+        <span>復路 · 2026/08/11</span>
+        <span class="bp-airline">Jetstar Japan</span>
+      </div>
+      <div class="bp-route">
+        <div class="bp-ap">
+          <div class="bp-code">CTS</div>
+          <div class="bp-city">新千歳</div>
+          <div class="bp-time">11:25</div>
         </div>
-        <div class="flt-mid">
-          <div class="flt-line"></div>
-          <div class="flt-dur">1時間40分</div>
+        <div class="bp-mid">
+          <div class="bp-arrow">· · · ✈ · · ·</div>
+          <div class="bp-dur">1 h 40 m</div>
         </div>
-        <div class="flt-ap" style="text-align:right">
-          <div class="flt-code">NRT</div>
-          <div class="flt-city">成田</div>
-          <div class="flt-time">13:05</div>
+        <div class="bp-ap right">
+          <div class="bp-code">NRT</div>
+          <div class="bp-city">成田</div>
+          <div class="bp-time">13:05</div>
         </div>
       </div>
-      <div class="flt-tags">
-        <span class="flt-tag">GK 126</span>
-        <span class="flt-tag">Jetstar Japan</span>
-        <span class="flt-tag">エコノミー</span>
+      <hr class="bp-tear" />
+      <div class="bp-footer">
+        <span class="bp-tag">GK 126</span>
+        <span class="bp-tag">エコノミー</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ 持ち物 ══ -->
-<div id="tab-packing" class="tab-pane">
-  <div class="sec">
-    <div class="pack-hd">
-      <div class="prog-wrap">
-        <div class="prog-bg"><div class="prog-fill" id="progressFill"></div></div>
-        <span class="prog-pct" id="progressPct">0%</span>
+<!-- 持ち物 -->
+<div id="pane-packing" class="pane">
+  <div class="wrap">
+    <div class="pack-prog-row">
+      <span class="pack-prog-lbl">Packing List</span>
+      <div class="pack-prog-right">
+        <span class="pack-prog-pct" id="progressPct">0%</span>
+        <button class="pack-edit-btn" id="editToggleBtn">編集</button>
       </div>
-      <button class="edit-btn" id="editToggleBtn">編集</button>
     </div>
-    <div id="main"></div>
-    <div class="footer-btns">
-      <button class="reset-btn" id="resetBtn">↺ チェックをリセット</button>
-      <button class="restore-btn" id="restoreBtn">⟳ デフォルトの項目に戻す</button>
+    <div class="pack-prog-track">
+      <div class="pack-prog-fill" id="progressFill"></div>
+    </div>
+    <div id="pack-main"></div>
+    <div class="pack-footer">
+      <button class="txt-btn danger" id="resetBtn">チェックをすべてリセット</button>
+      <button class="txt-btn" id="restoreBtn">デフォルトの項目に戻す</button>
     </div>
   </div>
 </div>
 
-<!-- ══ その他 ══ -->
-<div id="tab-other" class="tab-pane">
-  <div class="sec">
-    <a class="warica-btn" href="https://walica.jp/group/01KXQ9M1WV2M9Q1WV98JN369C1" target="_blank" rel="noopener">
-      <span class="wbi">💰</span>
-      <div><div>Warica で割り勘</div><div class="wbs">旅費の精算はこちら</div></div>
-      <span class="wba">↗</span>
+<!-- その他 -->
+<div id="pane-other" class="pane">
+  <div class="wrap">
+    <a class="warica-btn" href="https://walica.jp/group/01KXQ9M1WV2M9Q1WV98JN369C1"
+       target="_blank" rel="noopener">
+      <span class="wi">💰</span>
+      <div>
+        <div class="wt">Warica で割り勘</div>
+        <div class="ws">旅費の精算はこちら</div>
+      </div>
+      <span class="wa">↗</span>
     </a>
 
-    <div class="sec-label">🏄 洞爺湖 SUP アクティビティ</div>
-    <div class="card act-detail">
+    <div class="sec-lbl">🏄 SUP アクティビティ</div>
+    <div class="act-detail">
       <div class="act-detail-ttl">洞爺湖レイクSUP体験</div>
       <div class="det-row">
-        <span class="det-lbl">プラン</span>
-        <span class="det-val">【北海道・洞爺湖】口コミ限定 洞爺湖レイクSUP体験</span>
+        <span class="det-k">プラン</span>
+        <span class="det-v">【北海道・洞爺湖】口コミ限定 洞爺湖レイクSUP体験</span>
       </div>
       <div class="det-row">
-        <span class="det-lbl">事業者</span>
-        <span class="det-val">K-LABO</span>
+        <span class="det-k">事業者</span>
+        <span class="det-v">K-LABO</span>
       </div>
       <div class="det-row">
-        <span class="det-lbl">日時</span>
-        <span class="det-val">2026/08/09 (日) 集合 14:20 / 開始 14:30</span>
+        <span class="det-k">日時</span>
+        <span class="det-v">2026/08/09（日） 集合 14:20 / 開始 14:30</span>
       </div>
       <div class="det-row">
-        <span class="det-lbl">人数</span>
-        <span class="det-val">大人 7人（9〜70才）</span>
+        <span class="det-k">人数</span>
+        <span class="det-v">大人 7人（9〜70才）</span>
       </div>
       <div class="det-row">
-        <span class="det-lbl">注意事項</span>
-        <span class="det-val">気温が低い場合ウェットスーツが必要になる場合あり。身長・靴サイズ・性別は事前申告済み。</span>
+        <span class="det-k">注意</span>
+        <span class="det-v">気温が低い場合ウェットスーツ必要な場合あり。身長・靴サイズ・性別は事前申告済み。</span>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ── Bottom Nav ── -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-pane="itinerary">
+    <span class="ni">🗓</span>旅程
+  </button>
+  <button class="nav-btn" data-pane="flight">
+    <span class="ni">✈️</span>フライト
+  </button>
+  <button class="nav-btn" data-pane="packing">
+    <span class="ni">🎒</span>持ち物
+  </button>
+  <button class="nav-btn" data-pane="other">
+    <span class="ni">☀️</span>その他
+  </button>
+</nav>
+
 <script>
-/* ── Tab switching ── */
-document.querySelectorAll(".tab-btn").forEach(btn => {
+/* ── Nav switching ── */
+document.querySelectorAll(".nav-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    const t = btn.dataset.tab;
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b === btn));
-    document.querySelectorAll(".tab-pane").forEach(p => p.classList.toggle("active", p.id === "tab-" + t));
+    const id = btn.dataset.pane;
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b === btn));
+    document.querySelectorAll(".pane").forEach(p => p.classList.toggle("active", p.id === "pane-" + id));
+    window.scrollTo({ top: 0, behavior: "instant" });
   });
 });
 
 /* ── Itinerary ── */
 const DAYS = [
   {
-    date: "2026-08-08", label: "8/8 (土)", route: "東京 → 新千歳 → 札幌",
+    date: "2026-08-08", num: "8", wk: "SAT", month: "Aug",
+    route: "東京 → 新千歳 → 札幌",
     acts: [
-      { time: "16:50", text: "成田発 IJ835 → 18:35 新千歳着", rsv: false },
-      { time: "夜", text: "札幌で飲み 🍻", rsv: false },
+      { t: "16:50", d: "成田発 IJ835 → 18:35 新千歳着", rsv: false },
+      { t: "夜",    d: "札幌で飲み 🍻", rsv: false },
     ],
-    stay: { label: "🏠 宿 (Airbnb・札幌)", url: "https://www.airbnb.com/l/ohH70mvu" },
-    links: [],
+    links: [{ label: "🏠 宿 (Airbnb・札幌)", url: "https://www.airbnb.com/l/ohH70mvu" }],
   },
   {
-    date: "2026-08-09", label: "8/9 (日)", route: "札幌 → 洞爺湖",
+    date: "2026-08-09", num: "9", wk: "SUN", month: "Aug",
+    route: "札幌 → 洞爺湖",
     acts: [
-      { time: "9:00", text: "レンタカー出発（トヨタレンタカー札幌駅前店）", rsv: true,
+      { t: "9:00",  d: "レンタカー出発（トヨタレンタカー札幌駅前店）", rsv: true,
         mapUrl: "https://maps.app.goo.gl/jnTwAcMAEVok9Pqt7?g_st=il" },
-      { time: "14:20", text: "洞爺湖SUP 集合 / 14:30 開始（K-LABO）🏄", rsv: true },
+      { t: "14:20", d: "洞爺湖SUP 集合 / 14:30 開始（K-LABO）🏄", rsv: true },
     ],
-    stay: { label: "🏠 宿 (Airbnb・洞爺湖)", url: "https://www.airbnb.com/l/FKQr6pWi" },
-    links: [],
+    links: [{ label: "🏠 宿 (Airbnb・洞爺湖)", url: "https://www.airbnb.com/l/FKQr6pWi" }],
   },
   {
-    date: "2026-08-10", label: "8/10 (月)", route: "室蘭・登別・苫小牧 → 札幌",
+    date: "2026-08-10", num: "10", wk: "MON", month: "Aug",
+    route: "室蘭・登別・苫小牧 → 札幌",
     acts: [
-      { time: "日中", text: "室蘭・登別・苫小牧 観光 🗺️", rsv: false },
-      { time: "19:30", text: "サッポロビール園 🍺", rsv: true },
+      { t: "日中", d: "室蘭・登別・苫小牧 観光 🗺️", rsv: false },
+      { t: "19:30", d: "サッポロビール園 🍺", rsv: true },
     ],
-    stay: { label: "🏠 宿 (Airbnb・札幌)", url: "https://www.airbnb.com/l/h5kebnru" },
-    links: [],
+    links: [{ label: "🏠 宿 (Airbnb・札幌)", url: "https://www.airbnb.com/l/h5kebnru" }],
   },
   {
-    date: "2026-08-11", label: "8/11 (火)", route: "札幌 → 新千歳 → 東京",
+    date: "2026-08-11", num: "11", wk: "TUE", month: "Aug",
+    route: "新千歳 → 東京",
     acts: [
-      { time: "〜12:15", text: "新千歳空港へ移動", rsv: false },
-      { time: "11:25", text: "新千歳発 GK126 → 13:05 成田着 ✈️", rsv: false },
+      { t: "〜12:15", d: "新千歳空港へ移動", rsv: false },
+      { t: "11:25",  d: "新千歳発 GK126 → 13:05 成田着 ✈️", rsv: false },
     ],
-    stay: null,
     links: [],
   },
 ];
 
-(function buildItinerary() {
+(function () {
   const today = new Date().toISOString().slice(0, 10);
   const wrap = document.getElementById("itinerary-cards");
 
   DAYS.forEach(day => {
     const isToday = day.date === today;
     const card = document.createElement("div");
-    card.className = "card day-card" + (isToday ? " is-today" : "");
+    card.className = "day-card" + (isToday ? " is-today" : "");
 
     const actsHtml = day.acts.map(a => `
       <div class="act-row">
-        <span class="act-time">${a.time}</span>
-        <div class="act-body">
-          <span class="act-text">${a.text}${a.rsv ? '<span class="rsv-badge">予約済み</span>' : ""}</span>
-          ${a.mapUrl ? `<div style="margin-top:6px"><a href="${a.mapUrl}" target="_blank" rel="noopener" class="pill-link green">📍 地図</a></div>` : ""}
+        <span class="act-time">${a.t}</span>
+        <div class="act-content">
+          <span class="act-text">${a.d}${a.rsv ? '<span class="rsv">予約済</span>' : ""}</span>
+          ${a.mapUrl ? `<div style="margin-top:5px"><a href="${a.mapUrl}" target="_blank" rel="noopener" class="pill green">📍 地図</a></div>` : ""}
         </div>
       </div>`).join("");
 
-    const linksHtml = day.stay
-      ? `<div class="day-links"><a href="${day.stay.url}" target="_blank" rel="noopener" class="pill-link">${day.stay.label}</a></div>`
+    const linksHtml = day.links.length
+      ? `<div class="day-links">${day.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener" class="pill">${l.label}</a>`).join("")}</div>`
       : "";
 
     card.innerHTML = `
-      <div class="day-hd">
-        <div>
-          <div class="day-date">${day.label}</div>
-          <div class="day-route">${day.route}</div>
+      <div class="day-top">
+        <div class="day-num-blk">
+          <div class="day-num">${day.num}</div>
+          <div class="day-wk">${day.wk}</div>
         </div>
-        ${isToday ? '<span class="today-badge">TODAY</span>' : ""}
+        <div class="day-info">
+          <div class="day-month">${day.month}</div>
+          <div class="day-route">${day.route}</div>
+          ${isToday ? '<span class="today-tag">Today</span>' : ""}
+        </div>
       </div>
-      <div class="day-bd">${actsHtml}${linksHtml}</div>`;
+      <div class="day-divider"></div>
+      <div class="day-acts">${actsHtml}</div>
+      ${linksHtml}`;
 
     wrap.appendChild(card);
   });
@@ -805,18 +1041,18 @@ const DEFAULTS = [
   {
     id: "clothes", icon: "👕", name: "衣類",
     items: [
-      "3日分の下着", "3日分の洋服", "スポーツ用シャツ (2枚)", "パジャマ",
-      "羽織りもの (朝晩冷える対策)", "水着", "ラッシュガード",
-      "濡れてもいい服 / 着替え (SUP用)",
-      "歩きやすい靴 (観光用)", "サンダル / マリンシューズ", "帽子", "サングラス",
+      "3日分の下着", "3日分の洋服", "スポーツ用シャツ（2枚）", "パジャマ",
+      "羽織りもの（朝晩冷える対策）", "水着", "ラッシュガード",
+      "濡れてもいい服 / 着替え（SUP用）",
+      "歩きやすい靴（観光用）", "サンダル / マリンシューズ", "帽子", "サングラス",
     ],
   },
   {
-    id: "toiletry", icon: "🧴", name: "洗面・衛生用品",
+    id: "toiletry", icon: "🧴", name: "洗面・衛生",
     items: [
       "シャンプー・リンス・ボディソープ", "歯ブラシ・歯磨き粉", "タオルハンカチ",
-      "バスタオル", "速乾タオル (SUP後用)", "髭剃り",
-      "塗り薬 (常備薬)", "飲み薬 (常備薬)", "のど飴", "鼻呼吸テープ", "汗拭きシート",
+      "バスタオル", "速乾タオル（SUP後用）", "髭剃り",
+      "塗り薬（常備薬）", "飲み薬（常備薬）", "のど飴", "鼻呼吸テープ", "汗拭きシート",
     ],
   },
   {
@@ -829,17 +1065,17 @@ const DEFAULTS = [
   {
     id: "valuables", icon: "💳", name: "貴重品・書類",
     items: [
-      "財布", "現金 (多めに)", "運転免許証",
-      "レンタカー予約確認書 (画面 or 印刷)",
+      "財布", "現金（多めに）", "運転免許証",
+      "レンタカー予約確認書（画面 or 印刷）",
     ],
   },
   {
     id: "bags", icon: "🎒", name: "バッグ・小物",
     items: [
-      "スーツケース (機内持ち込み: 23×36×56cm以内・5kg以内)",
+      "スーツケース（機内: 23×36×56cm以内・5kg以内）",
       "少し大きめのカバン", "ポーチ",
-      "防水ポーチ (スマホ・貴重品用)",
-      "防水バッグ (SUP用カメラ・荷物)",
+      "防水ポーチ（スマホ・貴重品用）",
+      "防水バッグ（SUP用カメラ・荷物）",
       "エコバッグ", "折りたたみ傘", "日傘", "スリッパ",
     ],
   },
@@ -850,8 +1086,8 @@ const DEFAULTS = [
   {
     id: "other", icon: "☀️", name: "その他",
     items: [
-      "日焼け止め (ウォータープルーフ・SUP必須)",
-      "雨具 (折りたたみ傘で対応可)",
+      "日焼け止め（ウォータープルーフ・SUP必須）",
+      "雨具（折りたたみ傘で対応可）",
     ],
   },
 ];
@@ -862,11 +1098,11 @@ function uid() {
   return Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
 }
 
-function defaultItemsForCat(cat) {
+function defaultItems(cat) {
   return cat.items.map(label => ({ id: uid(), label }));
 }
 
-function loadStorage() {
+function loadData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
@@ -874,53 +1110,53 @@ function loadStorage() {
   return null;
 }
 
-function initStorage() {
-  const saved = loadStorage();
+function initData() {
+  const saved = loadData();
   if (saved) return saved;
   const d = { items: {}, checks: {} };
-  DEFAULTS.forEach(cat => { d.items[cat.id] = defaultItemsForCat(cat); });
+  DEFAULTS.forEach(cat => { d.items[cat.id] = defaultItems(cat); });
   localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
   return d;
 }
 
-let data = initStorage();
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+let data = initData();
+const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 
 let editMode = false;
-function getItems(catId) { return data.items[catId] || []; }
+
+const getItems = id => data.items[id] || [];
 
 function updateProgress() {
-  let total = 0, checked = 0;
+  let total = 0, done = 0;
   DEFAULTS.forEach(cat => {
-    getItems(cat.id).forEach(item => { total++; if (data.checks[item.id]) checked++; });
+    getItems(cat.id).forEach(it => { total++; if (data.checks[it.id]) done++; });
   });
-  const pct = total === 0 ? 0 : Math.round(checked / total * 100);
+  const pct = total ? Math.round(done / total * 100) : 0;
   document.getElementById("progressFill").style.width = pct + "%";
   document.getElementById("progressPct").textContent = pct + "%";
 }
 
 function updateBadge(catId) {
   const items = getItems(catId);
-  const total = items.length;
-  const checked = items.filter(it => data.checks[it.id]).length;
-  const badge = document.querySelector(`.category-badge[data-cat="${catId}"]`);
-  if (!badge) return;
-  badge.textContent = `${checked}/${total}`;
-  badge.classList.toggle("complete", total > 0 && checked === total);
+  const done = items.filter(it => data.checks[it.id]).length;
+  const el = document.querySelector(`.cat-badge[data-cat="${catId}"]`);
+  if (!el) return;
+  el.textContent = `${done}/${items.length}`;
+  el.classList.toggle("done", items.length > 0 && done === items.length);
 }
 
-function toggleItem(itemId, li) {
+function toggleItem(id, li) {
   if (editMode) return;
-  data.checks[itemId] = !data.checks[itemId];
+  data.checks[id] = !data.checks[id];
   save();
-  li.classList.toggle("checked", !!data.checks[itemId]);
-  updateBadge(li.closest(".category-card").dataset.catId);
+  li.classList.toggle("checked", !!data.checks[id]);
+  updateBadge(li.closest(".cat-block").dataset.cat);
   updateProgress();
 }
 
-function deleteItem(catId, itemId) {
-  data.items[catId] = data.items[catId].filter(it => it.id !== itemId);
-  delete data.checks[itemId];
+function deleteItem(catId, id) {
+  data.items[catId] = data.items[catId].filter(it => it.id !== id);
+  delete data.checks[id];
   save();
   updateBadge(catId);
   updateProgress();
@@ -929,89 +1165,86 @@ function deleteItem(catId, itemId) {
 function addItem(catId, label) {
   label = label.trim();
   if (!label) return null;
-  const item = { id: uid(), label };
-  data.items[catId].push(item);
+  const it = { id: uid(), label };
+  data.items[catId].push(it);
   save();
   updateBadge(catId);
   updateProgress();
-  return item;
+  return it;
 }
 
-function buildItemEl(catId, item) {
+function makeItemEl(catId, item) {
   const li = document.createElement("li");
   li.className = "item" + (data.checks[item.id] ? " checked" : "");
-  li.dataset.itemId = item.id;
 
   const del = document.createElement("button");
-  del.className = "delete-btn";
+  del.className = "del-btn";
   del.textContent = "−";
-  del.setAttribute("aria-label", "削除");
   del.addEventListener("click", e => { e.stopPropagation(); li.remove(); deleteItem(catId, item.id); });
 
-  const cb = document.createElement("span");
-  cb.className = "check-box";
-  cb.innerHTML = '<span class="check-mark">✓</span>';
+  const chk = document.createElement("span");
+  chk.className = "chk";
+  chk.innerHTML = '<span class="chk-mark">✓</span>';
 
   const lbl = document.createElement("span");
-  lbl.className = "item-label";
+  lbl.className = "item-lbl";
   lbl.textContent = item.label;
 
-  li.append(del, cb, lbl);
+  li.append(del, chk, lbl);
   li.addEventListener("click", () => toggleItem(item.id, li));
   return li;
 }
 
-function buildAddRow(catId, list) {
+function makeAddRow(catId, list) {
   const row = document.createElement("div");
-  row.className = "add-item-row";
+  row.className = "add-row";
 
-  const input = document.createElement("input");
-  input.type = "text";
-  input.className = "add-item-input";
-  input.placeholder = "項目を追加...";
-  input.maxLength = 60;
+  const inp = document.createElement("input");
+  inp.type = "text";
+  inp.className = "add-input";
+  inp.placeholder = "項目を追加...";
+  inp.maxLength = 60;
 
   const btn = document.createElement("button");
-  btn.className = "add-item-btn";
+  btn.className = "add-btn";
   btn.textContent = "+";
-  btn.setAttribute("aria-label", "追加");
 
-  function commit() {
-    const item = addItem(catId, input.value);
-    if (item) { list.appendChild(buildItemEl(catId, item)); input.value = ""; input.focus(); }
-  }
+  const commit = () => {
+    const it = addItem(catId, inp.value);
+    if (it) { list.appendChild(makeItemEl(catId, it)); inp.value = ""; inp.focus(); }
+  };
 
   btn.addEventListener("click", commit);
-  input.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); commit(); } });
-  row.append(input, btn);
+  inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); commit(); } });
+  row.append(inp, btn);
   return row;
 }
 
-function buildPackingUI() {
-  const main = document.getElementById("main");
+function buildPacking() {
+  const main = document.getElementById("pack-main");
   main.innerHTML = "";
 
   DEFAULTS.forEach(cat => {
-    const card = document.createElement("div");
-    card.className = "category-card";
-    card.dataset.catId = cat.id;
+    const block = document.createElement("div");
+    block.className = "cat-block";
+    block.dataset.cat = cat.id;
 
     const hd = document.createElement("div");
-    hd.className = "category-header";
+    hd.className = "cat-hd";
     hd.innerHTML = `
-      <span class="category-title">
-        <span>${cat.icon}</span><span>${cat.name}</span>
-        <span class="chevron">▾</span>
-      </span>
-      <span class="category-badge" data-cat="${cat.id}">0/0</span>`;
-    hd.addEventListener("click", () => card.classList.toggle("collapsed"));
+      <span class="cat-icon">${cat.icon}</span>
+      <span class="cat-name">${cat.name}</span>
+      <span class="cat-rule"></span>
+      <span class="cat-badge" data-cat="${cat.id}">0/0</span>
+      <span class="cat-chev">▾</span>`;
+    hd.addEventListener("click", () => block.classList.toggle("collapsed"));
 
     const list = document.createElement("ul");
     list.className = "item-list";
-    getItems(cat.id).forEach(item => list.appendChild(buildItemEl(cat.id, item)));
+    getItems(cat.id).forEach(it => list.appendChild(makeItemEl(cat.id, it)));
 
-    card.append(hd, list, buildAddRow(cat.id, list));
-    main.appendChild(card);
+    block.append(hd, list, makeAddRow(cat.id, list));
+    main.appendChild(block);
     updateBadge(cat.id);
   });
 
@@ -1023,7 +1256,6 @@ editBtn.addEventListener("click", () => {
   editMode = !editMode;
   document.body.classList.toggle("edit-mode", editMode);
   editBtn.textContent = editMode ? "完了" : "編集";
-  editBtn.classList.toggle("done", editMode);
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
@@ -1038,12 +1270,12 @@ document.getElementById("resetBtn").addEventListener("click", () => {
 document.getElementById("restoreBtn").addEventListener("click", () => {
   if (!confirm("項目をデフォルトに戻しますか？\nチェック状態もリセットされます。")) return;
   data = { items: {}, checks: {} };
-  DEFAULTS.forEach(cat => { data.items[cat.id] = defaultItemsForCat(cat); });
+  DEFAULTS.forEach(cat => { data.items[cat.id] = defaultItems(cat); });
   save();
-  buildPackingUI();
+  buildPacking();
 });
 
-buildPackingUI();
+buildPacking();
 </script>
 </body>
 </html>
