@@ -396,7 +396,7 @@
 </head>
 <body>
 
-<div class="splash">
+<div class="splash" id="splash">
   <span class="splash-snow">❄</span>
   <span class="splash-date">Aug 8–11</span>
   <span class="splash-label">Hokkaido 2026</span>
@@ -463,6 +463,14 @@
 </a>
 
 <script>
+/* ── Splash: 初回のみ表示 ── */
+const splash = document.getElementById("splash");
+if (localStorage.getItem("hokkaido-visited")) {
+  splash.style.display = "none";
+} else {
+  localStorage.setItem("hokkaido-visited", "1");
+}
+
 /* ── Section nav active tracking ── */
 const navLinks = document.querySelectorAll(".sec-nav a");
 const sections = document.querySelectorAll("section[id]");
