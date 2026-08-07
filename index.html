@@ -38,17 +38,53 @@
       inset: 0;
       z-index: 9999;
       background: #18243c;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       pointer-events: none;
-      animation: splashOut 1s .15s ease-out forwards;
+      animation: splashOut 1.1s 1.1s cubic-bezier(.4,0,1,1) forwards;
+    }
+
+    .splash-snow {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,.22);
+      margin-bottom: 6px;
+      animation: splashTextOut .35s .75s ease forwards;
+    }
+
+    .splash-label {
+      font-size: .58rem;
+      font-weight: 800;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      animation: splashTextOut .35s .8s ease forwards;
+    }
+
+    .splash-date {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -.03em;
+      color: rgba(255,255,255,.6);
+      animation: splashTextOut .35s .7s ease forwards;
     }
 
     @keyframes splashOut {
-      0%   { opacity: 1; }
-      100% { opacity: 0; visibility: hidden; }
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0; transform: scale(1.07); visibility: hidden; }
+    }
+
+    @keyframes splashTextOut {
+      to { opacity: 0; transform: translateY(-4px); }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .splash { animation-duration: 1ms !important; }
+      .splash, .splash-snow, .splash-label, .splash-date {
+        animation-duration: 1ms !important;
+        animation-delay: 0ms !important;
+      }
     }
 
     /* ── Hero ── */
@@ -360,7 +396,11 @@
 </head>
 <body>
 
-<div class="splash"></div>
+<div class="splash">
+  <span class="splash-snow">❄</span>
+  <span class="splash-date">Aug 8–11</span>
+  <span class="splash-label">Hokkaido 2026</span>
+</div>
 
 <!-- Hero -->
 <header class="hero">
