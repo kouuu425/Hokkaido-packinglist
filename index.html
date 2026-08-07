@@ -32,6 +32,32 @@
       padding-bottom: calc(100px + env(safe-area-inset-bottom));
     }
 
+    /* ── Load animations ── */
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(-18px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes mtnRise {
+      from { clip-path: inset(100% 0 0 0); }
+      to   { clip-path: inset(0% 0 0 0); }
+    }
+
+    .anim-card {
+      animation: fadeUp .45s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; }
+    }
+
     /* ── Hero ── */
     .hero {
       background: var(--hero);
@@ -47,6 +73,7 @@
       letter-spacing: -.02em;
       line-height: 1;
       margin-bottom: 3px;
+      animation: slideRight .55s .05s cubic-bezier(.22,1,.36,1) both;
     }
     .hero-title span { font-weight: 300; opacity: .5; }
     .hero-sub {
@@ -54,8 +81,13 @@
       letter-spacing: .08em;
       opacity: .55;
       margin-bottom: 8px;
+      animation: fadeIn .5s .3s ease both;
     }
-    .hero-mtn { display: block; width: 100%; }
+    .hero-mtn {
+      display: block;
+      width: 100%;
+      animation: mtnRise .7s .15s cubic-bezier(.22,1,.36,1) both;
+    }
 
     /* ── Sticky section nav ── */
     .sec-nav {
@@ -67,6 +99,7 @@
       -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
       display: flex;
+      animation: fadeIn .4s .45s ease both;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
@@ -330,6 +363,7 @@
       -webkit-tap-highlight-color: transparent;
       transition: transform .15s cubic-bezier(.22,1,.36,1), box-shadow .15s;
       user-select: none;
+      animation: fadeUp .5s .75s cubic-bezier(.22,1,.36,1) both;
       cursor: pointer;
     }
     .walica-fab:active {
@@ -503,7 +537,7 @@ function renderAct(a) {
 (function buildItinerary() {
   const today = new Date().toISOString().slice(0, 10);
   const wrap = document.getElementById("itinerary-cards");
-  DAYS.forEach(day => {
+  DAYS.forEach((day, i) => {
     const isToday = day.date === today;
     const card = document.createElement("div");
     card.className = "day-card" + (isToday ? " is-today" : "");
@@ -528,6 +562,8 @@ function renderAct(a) {
       <div class="day-body">${day.acts.map(renderAct).join("")}</div>
       ${linksHtml}`;
 
+    card.classList.add("anim-card");
+    card.style.animationDelay = (.5 + i * .1) + "s";
     wrap.appendChild(card);
   });
 })();
