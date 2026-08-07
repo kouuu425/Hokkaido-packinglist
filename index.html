@@ -657,7 +657,7 @@ function buildPacking() {
   main.innerHTML = "";
   DEFAULTS.forEach(cat => {
     const block = document.createElement("div");
-    block.className = "cat-block";
+    block.className = "cat-block collapsed";
     block.dataset.cat = cat.id;
 
     const hd = document.createElement("div");
